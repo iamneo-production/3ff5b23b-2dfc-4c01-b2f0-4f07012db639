@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import axios from "axios"
+import { Link } from "react-router-dom";
 
 function Signup(){
     const style = {
@@ -106,6 +107,7 @@ function Signup(){
                 >
                     SIGN UP
                 </button>
+                <p>Already a member?<Link to="login" id="signinLink">click here</Link></p>
             </form>
         </div>
     )
