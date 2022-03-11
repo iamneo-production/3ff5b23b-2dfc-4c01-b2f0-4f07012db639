@@ -10,19 +10,21 @@ function Signup(){
     const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
-        if(validate()){
-            const res = await axios.post("https://8080-cfadbaaaaacacadbacdaacadbcaacbbda.examlyiopb.examly.io/signup", {
-                "email": email,
-                "username": username,
-                "password": password,
-                "mobile": mobileNo
-            })
-            if(res.data === true){
-                navigate("/home", {replace: true})
-            }
-            alert("Server Error: Try again later")
-        }
         e.preventDefault()
+        setShow(true, async () => {
+            if(validate()){
+                const res = await axios.post("https://8080-cfadbaaaaacacadbacdaacadbcaacbbda.examlyiopb.examly.io/signup", {
+                    "email": email,
+                    "username": username,
+                    "password": password,
+                    "mobile": mobileNo
+                })
+                if(res.data === true){
+                    navigate("/home", {replace: true})
+                }
+                alert("Server Error: Try again later")
+            }
+        })
     }
 
     const validate = () => {
@@ -35,6 +37,8 @@ function Signup(){
 
     const [email, setEmail] = useState('')
     const validateEmail = (val) => {
+        if(val === '' && !show)
+            return null
         if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(val))
             return null
         return <p>not a valid email address</p>
@@ -42,13 +46,15 @@ function Signup(){
 
     const [username, setUserName] = useState('')
     const validateUsername = (val) => {
-        if(val !== '')
+        if(!show || val !== '')
             return null
         return <p>username is required</p>
     }
 
     const [mobileNo, setMobileNo] = useState('')
     const validateMobile = (val) => {
+        if(val === '' && !show)
+            return null
         if(!/^\d+$/.test(val))
             return <p>mobile should contain only digits</p>
         if(val?.length === 10)
@@ -58,6 +64,8 @@ function Signup(){
 
     const [password, setPassword] = useState('')
     const validatePassword = (val) => {
+        if(val === '' && !show)
+            return null
         if(val === ''){
             return <p>password cannot be null</p>
         }
@@ -68,10 +76,14 @@ function Signup(){
 
     const [confirmPassword, setConfirmPassword] = useState('')
     const validateConfirmPassword = (val) => {
+        if(val === '' && !show)
+            return null
         if(password === val)
             return null
         return <p>Does not match password</p>
     }
+
+    const [show, setShow] = useState(false)
 
     return (
         <div style={{display:"flex", justifyContent: "center", alignItems: "center"}}>
@@ -84,7 +96,7 @@ function Signup(){
                     value={email}
                     onChange={(e) => {setEmail(e.target.value)}}
                     />
-                {email !== '' && validateEmail(email)}
+                {validateEmail(email)}
 
                 <input 
                     type="text" 
@@ -93,7 +105,7 @@ function Signup(){
                     value={username}
                     onChange={(e) => {setUserName(e.target.value)}}
                     />
-                {username !== '' && validateUsername(username)}
+                {validateUsername(username)}
 
                 <input 
                     type="tel"
@@ -102,7 +114,7 @@ function Signup(){
                     value={mobileNo}
                     onChange={(e) => {setMobileNo(e.target.value)}}
                     />
-                {mobileNo !== '' && validateMobile(mobileNo)}
+                {validateMobile(mobileNo)}
 
                 <input
                     type="password"
@@ -111,7 +123,7 @@ function Signup(){
                     value={password}
                     onChange={(e) => {setPassword(e.target.value)}}
                     />
-                {password !== '' && validatePassword(password)}
+                {validatePassword(password)}
 
                 <input
                     type="password"
@@ -120,7 +132,7 @@ function Signup(){
                     value={confirmPassword?.value}
                     onChange={(e) => {setConfirmPassword(e.target.value)}}
                     />
-                {confirmPassword !== '' && validateConfirmPassword(confirmPassword)}
+                {validateConfirmPassword(confirmPassword)}
 
                 <button
                     type="submit"
