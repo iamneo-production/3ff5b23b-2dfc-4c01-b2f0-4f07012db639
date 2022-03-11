@@ -57,7 +57,8 @@ function Signup(){
     }
     return (
         <div style={{display:"flex", justifyContent: "center", alignItems: "center"}}>
-            <form style={style}>
+            <form style={style} id="signupBox">
+                <h1>SIGN UP</h1>
                 <input 
                     type="email" 
                     id="email" 
