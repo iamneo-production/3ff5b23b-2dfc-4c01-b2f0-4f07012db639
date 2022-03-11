@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import axios from "axios"
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Signup(){
     const style = {
@@ -15,10 +15,20 @@ function Signup(){
         validateMobile(mobileNo.value) === null
     }
 
-    const handleSubmit = (e) => {
-        console.log(validate())
+    const navigate = useNavigate()
+
+    const handleSubmit = async (e) => {
         if(validate()){
-            console.log("posting")
+            const res = await axios.post("http://localhost:8081/signup", {
+                "email": email,
+                "username": username,
+                "password": password,
+                "mobile": mobileNo
+            })
+            if(res.data === true){
+                navigate("/home", {replace: true})
+            }
+            alert("Server Error: Try again later")
         }
         e.preventDefault()
     }
