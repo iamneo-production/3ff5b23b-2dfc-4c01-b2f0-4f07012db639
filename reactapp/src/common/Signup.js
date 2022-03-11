@@ -11,7 +11,7 @@ function Signup(){
 
     const handleSubmit = async (e) => {
         if(validate()){
-            const res = await axios.post("http://localhost:8081/signup", {
+            const res = await axios.post("https://8080-cfadbaaaaacacadbacdaacadbcaacbbda.examlyiopb.examly.io/signup", {
                 "email": email,
                 "username": username,
                 "password": password,
@@ -26,49 +26,51 @@ function Signup(){
     }
 
     const validate = () => {
-        return validateEmail(email.value) === null && 
-        validateUsername(username.value) === null && 
-        validatePassword(password.value) === null && 
-        validateConfirmPassword(confirmPassword.value) === null && 
-        validateMobile(mobileNo.value) === null
+        return validateEmail(email) === null && 
+        validateUsername(username) === null && 
+        validatePassword(password) === null && 
+        validateConfirmPassword(confirmPassword) === null && 
+        validateMobile(mobileNo) === null
     }
 
-    const [email, setEmail] = useState(null)
+    const [email, setEmail] = useState('')
     const validateEmail = (val) => {
         if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(val))
             return null
-        return "not a valid email address"
+        return <p>not a valid email address</p>
     }
 
-    const [username, setUserName] = useState(null)
+    const [username, setUserName] = useState('')
     const validateUsername = (val) => {
-        if(val != null && val !== '')
+        if(val !== '')
             return null
-        return "username is required"
+        return <p>username is required</p>
     }
 
-    const [mobileNo, setMobileNo] = useState(null)
+    const [mobileNo, setMobileNo] = useState('')
     const validateMobile = (val) => {
+        if(!/^\d+$/.test(val))
+            return <p>mobile should contain only digits</p>
         if(val?.length === 10)
             return null
-        return "mobile number should have exactly 10 digits"
+        return <p>mobile number should have exactly 10 digits</p>
     }
 
-    const [password, setPassword] = useState(null)
+    const [password, setPassword] = useState('')
     const validatePassword = (val) => {
-        if(val === null || val === ''){
-            return "password cannot be null"
+        if(val === ''){
+            return <p>password cannot be null</p>
         }
         if(val.length > 7 && val.length < 16)
             return null
-        return "password must be 8 - 15 characters long"
+        return <p>password must be 8 - 15 characters long</p>
     }
 
-    const [confirmPassword, setConfirmPassword] = useState(null)
+    const [confirmPassword, setConfirmPassword] = useState('')
     const validateConfirmPassword = (val) => {
-        if(password === null || password?.value === val)
+        if(password === val)
             return null
-        return "Does not match password"
+        return <p>Does not match password</p>
     }
 
     return (
@@ -79,46 +81,46 @@ function Signup(){
                     type="email" 
                     id="email" 
                     placeholder = "Enter Email"
-                    value={email?.value}
-                    onChange={(e) => {setEmail({value: e.target.value, error: validateEmail(e.target.value)})}}
+                    value={email}
+                    onChange={(e) => {setEmail(e.target.value)}}
                     />
-                {email?.error && <p>{email.error}</p>}
+                {email !== '' && validateEmail(email)}
 
                 <input 
                     type="text" 
                     id="username" 
                     placeholder = "Enter Username"
-                    value={username?.value}
-                    onChange={(e) => {setUserName({value: e.target.value, error: validateUsername(e.target.value)})}}
+                    value={username}
+                    onChange={(e) => {setUserName(e.target.value)}}
                     />
-                {username?.error && <p>{username.error}</p>}
+                {username !== '' && validateUsername(username)}
 
                 <input 
                     type="tel"
                     id="mobilenumber"
                     placeholder = "Enter Mobile Number"
-                    value={mobileNo?.value}
-                    onChange={(e) => {setMobileNo({value: e.target.value, error: validateMobile(e.target.value)})}}
+                    value={mobileNo}
+                    onChange={(e) => {setMobileNo(e.target.value)}}
                     />
-                {mobileNo?.error && <p>{mobileNo.error}</p>}
+                {mobileNo !== '' && validateMobile(mobileNo)}
 
                 <input
                     type="password"
                     id="password"
                     placeholder = "Enter Password"
-                    value={password?.value}
-                    onChange={(e) => {setPassword({value: e.target.value, error: validatePassword(e.target.value)})}}
+                    value={password}
+                    onChange={(e) => {setPassword(e.target.value)}}
                     />
-                {password?.error && <p>{password.error}</p>}
+                {password !== '' && validatePassword(password)}
 
                 <input
                     type="password"
                     id="confirmpassword"
                     placeholder = "Confirm Password"
                     value={confirmPassword?.value}
-                    onChange={(e) => {setConfirmPassword({value: e.target.value, error: validateConfirmPassword(e.target.value)})}}
+                    onChange={(e) => {setConfirmPassword(e.target.value)}}
                     />
-                {confirmPassword?.error && <p>{confirmPassword.error}</p>}
+                {confirmPassword !== '' && validateConfirmPassword(confirmPassword)}
 
                 <button
                     type="submit"
