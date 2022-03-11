@@ -141,8 +141,7 @@ function Signup(){
                 >
                     SIGN UP
                 </button>
-                <p>Already a member?<Link to="login" id="signinLink">click here</Link></p>
-                
+                <p>Already a member?<Link to="/login" id="signinLink">click here</Link></p>
             </form>
         </div>
     )
