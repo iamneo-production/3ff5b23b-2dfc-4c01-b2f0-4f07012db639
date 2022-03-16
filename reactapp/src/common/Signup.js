@@ -1,6 +1,7 @@
-import React, { useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import axios from "axios"
 import { useNavigate, Link } from "react-router-dom";
+import Button from 'react-bootstrap/Button';
 
 function Signup(){
     const style = {
@@ -8,23 +9,36 @@ function Signup(){
         flexDirection: "column"}
 
     const navigate = useNavigate()
+    
+    const [show, setShow] = useState(false)
+    const firstUpdate = useRef(true);
+
+    useEffect(async () => {
+        if (firstUpdate.current) {
+            firstUpdate.current = false;
+            return;
+        }
+        if(validate()){
+            const res = await axios.post("https://8080-cfadbaaaaacacadbacdaacadbcaacbbda.examlyiopb.examly.io/signup", {
+                "email": email,
+                "username": username,
+                "password": password,
+                "mobile": mobileNo,
+                "role": "admin"
+            })
+            console.log(res)
+            if(res.data === true){
+                navigate("/login", {replace: true})
+            }
+            else{
+                alert("Server Error: Try again later")
+            }
+        }
+    }, [show])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        setShow(true, async () => {
-            if(validate()){
-                const res = await axios.post("https://8080-cfadbaaaaacacadbacdaacadbcaacbbda.examlyiopb.examly.io/signup", {
-                    "email": email,
-                    "username": username,
-                    "password": password,
-                    "mobile": mobileNo
-                })
-                if(res.data === true){
-                    navigate("/home", {replace: true})
-                }
-                alert("Server Error: Try again later")
-            }
-        })
+        setShow(true)
     }
 
     const validate = () => {
@@ -83,8 +97,6 @@ function Signup(){
         return <p>Does not match password</p>
     }
 
-    const [show, setShow] = useState(false)
-
     return (
         <div style={{display:"flex", justifyContent: "center", alignItems: "center"}}>
             <form style={style} id="signupBox">
@@ -134,13 +146,13 @@ function Signup(){
                     />
                 {validateConfirmPassword(confirmPassword)}
 
-                <button
+                <Button
                     type="submit"
                     id="submitButton"
                     onClick={(e)=>{handleSubmit(e)}}
                 >
                     SIGN UP
-                </button>
+                </Button>
                 <p>Already a member?<Link to="/login" id="signinLink">click here</Link></p>
             </form>
         </div>
